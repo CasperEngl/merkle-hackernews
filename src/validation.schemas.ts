@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+// Shared id type for all items
 export const itemIdSchema = z.number().int().positive()
 
 // https://github.com/HackerNews/API#users
