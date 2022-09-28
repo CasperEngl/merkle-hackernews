@@ -49,7 +49,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="bg-[rgb(246,246,239)]">
+      <main className="bg-[rgb(246,246,239)] pb-1">
         {topStories.isError ? (
           <div className="text-center text-red-500">{topStories.error.message}</div>
         ) : topStories.isLoading ? (
