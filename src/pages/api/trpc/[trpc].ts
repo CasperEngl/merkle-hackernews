@@ -1,7 +1,14 @@
 import { initTRPC } from '@trpc/server'
 import * as trpcNext from '@trpc/server/adapters/next'
 import { z } from 'zod'
-import { sortBySchema, Story, storyIdsSchema, storySchema, userSchema } from '~/validation.schemas'
+import {
+  sortBySchema,
+  Story,
+  itemSchema,
+  userSchema,
+  storyIdsSchema,
+  itemIdSchema,
+} from '~/validation.schemas'
 
 const t = initTRPC.create()
 
@@ -23,12 +30,12 @@ const appRouter = t.router({
       })
     )
     .query(async (request) => {
-      const storyIds = storyIdsSchema.parse(
-        await fetch(`${baseUrl}/topstories.json`).then((res) => res.json())
-      )
+      const storyIds = z
+        .array(itemIdSchema)
+        .parse(await fetch(`${baseUrl}/topstories.json`).then((res) => res.json()))
 
       const stories: Story[] = await Promise.all([
-        ...storyIds.slice(0, 10).map(async (id) => {
+        ...storyIds.slice(0, 999).map(async (id) => {
           const story = await caller.story({ id })
           const user = await caller.user({ id: story.by })
 
@@ -58,7 +65,7 @@ const appRouter = t.router({
 
       const story = await fetch(`${baseUrl}/item/${id}.json`).then((res) => res.json())
 
-      return storySchema.parse(story)
+      return itemSchema.parse(story)
     }),
   user: t.procedure
     .input(

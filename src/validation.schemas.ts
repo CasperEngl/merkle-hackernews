@@ -1,33 +1,37 @@
 import { z } from 'zod'
 
-export const storyIdSchema = z.number().int().positive()
+export const itemIdSchema = z.number().int().positive()
 
-export const storyIdsSchema = z.array(storyIdSchema)
-
+// https://github.com/HackerNews/API#users
 export const userSchema = z.object({
   about: z.string().optional(),
-  created: z.number().int().positive(),
+  created: itemIdSchema,
   id: z.string(),
-  karma: z.number().int().positive(),
-  submitted: z.array(storyIdSchema).optional(),
+  karma: itemIdSchema,
+  submitted: z.array(itemIdSchema).optional(),
 })
 
-export const storySchema = z.object({
+// https://github.com/HackerNews/API#items
+export const itemSchema = z.object({
+  id: itemIdSchema,
+  delete: z.boolean().optional(),
+  type: z.enum(['job', 'story', 'comment', 'poll', 'pollopt']),
   by: z.string(),
-  user: userSchema.optional(),
-  descendants: z.number().int(),
-  id: storyIdSchema,
-  kids: z.array(storyIdSchema).optional(),
-  score: z.number().int(),
-  time: z.number().int().positive(),
-  title: z.string(),
-  type: z.enum(['story']),
+  time: itemIdSchema,
+  text: z.string().optional(),
+  dead: z.boolean().optional(),
+  parent: itemIdSchema.optional(),
+  poll: itemIdSchema.optional(),
+  kids: z.array(itemIdSchema).optional(),
   url: z.string().url().optional(),
-})
+  score: z.number().int(),
+  title: z.string(),
+  parts: z.array(itemIdSchema).optional(),
 
-export const storiesSchema = z.array(storySchema)
+  user: userSchema.optional(),
+})
 
 export const sortBySchema = z.enum(['top', 'new'])
 
-export type Story = z.infer<typeof storySchema>
+export type Story = z.infer<typeof itemSchema>
 export type SortBy = z.infer<typeof sortBySchema>
