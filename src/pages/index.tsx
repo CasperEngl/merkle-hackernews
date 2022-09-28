@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { Story } from '~/components/Story'
+import { StatusMessage } from '~/components/status-message'
+import { Story } from '~/components/story'
 import { trpc } from '~/utils/trpc'
 
 export default function Home() {
@@ -15,9 +16,9 @@ export default function Home() {
 
       <main className="bg-[rgb(246,246,239)] pb-1">
         {topStories.isError ? (
-          <div className="text-center text-red-500">{topStories.error.message}</div>
+          <StatusMessage type="error">{topStories.error.message}</StatusMessage>
         ) : topStories.isLoading ? (
-          <div className="text-center text-gray-500">Loading...</div>
+          <StatusMessage type="neutral">Loading...</StatusMessage>
         ) : (
           topStories.data?.map((story, index) => (
             <Story key={story.id} story={story} rank={index + 1} />

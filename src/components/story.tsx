@@ -28,7 +28,7 @@ export const Story = ({ story, rank }: StoryProps) => {
 
           {story.url ? (
             <span className="text-xs text-gray-500">({new URL(story.url).hostname})</span>
-          ) : null}
+          ) : undefined}
         </StoryTitleWrapper>
 
         <div className="text-xs text-gray-500">
