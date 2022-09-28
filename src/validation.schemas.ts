@@ -28,10 +28,12 @@ export const itemSchema = z.object({
   title: z.string(),
   parts: z.array(itemIdSchema).optional(),
 
+  /**
+   * We need to get the user for each story to read their karma.
+   * This is not part of the API, but we can add it here, and
+   * transform the story in the topStories query.
+   */
   user: userSchema.optional(),
 })
 
-export const sortBySchema = z.enum(['top', 'new'])
-
 export type Story = z.infer<typeof itemSchema>
-export type SortBy = z.infer<typeof sortBySchema>

@@ -1,7 +1,7 @@
 import { initTRPC } from '@trpc/server'
 import * as trpcNext from '@trpc/server/adapters/next'
 import { z } from 'zod'
-import { sortBySchema, Story, itemSchema, userSchema, itemIdSchema } from '~/validation.schemas'
+import { itemIdSchema, itemSchema, Story, userSchema } from '~/validation.schemas'
 
 const t = initTRPC.create()
 
@@ -16,37 +16,26 @@ const baseUrl = new URL('https://hacker-news.firebaseio.com/v0')
  * API documentation: https://github.com/HackerNews/API
  */
 const appRouter = t.router({
-  topStories: t.procedure
-    .input(
-      z.object({
-        sortBy: sortBySchema,
-      })
-    )
-    .query(async (request) => {
-      const storyIds = z
-        .array(itemIdSchema)
-        .parse(await fetch(`${baseUrl}/topstories.json`).then((res) => res.json()))
+  topStories: t.procedure.query(async () => {
+    const storyIds = z
+      .array(itemIdSchema)
+      .parse(await fetch(`${baseUrl}/topstories.json`).then((res) => res.json()))
 
-      const stories: Story[] = await Promise.all([
-        ...storyIds.slice(0, 999).map(async (id) => {
-          const story = await caller.story({ id })
-          const user = await caller.user({ id: story.by })
+    const stories: Story[] = await Promise.all([
+      ...storyIds.slice(0, 10).map(async (id) => {
+        const story = await caller.story({ id })
+        const user = await caller.user({ id: story.by })
 
-          story.user = user
+        story.user = user
 
-          return story
-        }),
-      ])
+        return story
+      }),
+    ])
 
-      const { sortBy } = request.input
-
-      const sortings: Record<string, (a: Story, b: Story) => number> = {
-        top: (a, b) => b.score - a.score,
-        new: (a, b) => b.time - a.time,
-      }
-
-      return stories.sort(sortings[sortBy])
-    }),
+    return stories.sort((a, b) => {
+      return b.score - a.score
+    })
+  }),
   story: t.procedure
     .input(
       z.object({
