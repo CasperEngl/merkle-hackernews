@@ -23,7 +23,7 @@ export const Story = ({ story, rank }: StoryProps) => {
       </div>
 
       <div className="flex-1">
-        <StoryTitleWrapper className="flex gap-1 items-center" {...linkProps}>
+        <StoryTitleWrapper className="inline-flex gap-1 items-center" {...linkProps}>
           <span>{story.title}</span>
 
           {story.url ? (
