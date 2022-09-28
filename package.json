@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
-    "format": "prettier ."
+    "format": "prettier . --cache --check"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.7.1",
