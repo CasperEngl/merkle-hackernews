@@ -21,16 +21,16 @@ const appRouter = t.router({
       .array(itemIdSchema)
       .parse(await fetch(`${baseUrl}/topstories.json`).then((res) => res.json()))
 
-    const stories: Story[] = await Promise.all([
-      ...storyIds.slice(0, 10).map(async (id) => {
+    const stories: Story[] = await Promise.all(
+      storyIds.slice(0, 10).map(async (id) => {
         const story = await caller.story({ id })
         const user = await caller.user({ id: story.by })
 
         story.user = user
 
         return story
-      }),
-    ])
+      })
+    )
 
     return stories.sort((a, b) => {
       return b.score - a.score

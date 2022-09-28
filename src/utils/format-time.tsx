@@ -14,9 +14,9 @@ export const formatTime = (time: number) => {
     return timeFormatter.format(Math.round(diff / 60), 'minutes')
   }
 
-  if (diff < 86400) {
+  if (diff < 86_400) {
     return timeFormatter.format(Math.round(diff / 3600), 'hours')
   }
 
-  return timeFormatter.format(Math.round(diff / 86400), 'days')
+  return timeFormatter.format(Math.round(diff / 86_400), 'days')
 }
